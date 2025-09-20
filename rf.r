@@ -27,18 +27,28 @@ mtry <- floor(sqrt(ncol(df_treino)))
 
 amostra <- sample(df_treino, mtry, replace = TRUE)
 
-str(amostra[[2]])
-
-#calcula a media dos itens de cada variavel
-media <- mean(amostra[[2]], na.rm = TRUE)
-print(media)
-
 
 #print(colnames(amostra))
 
 
-for(i in mtry){
-     dp <-sqrt(sum((amostra[[i]]-media)^2)/length(amostra[[i]])-1)
-     print(dp)
- }
+#Como o R trabalha com vetores, eu subistiui o 
+#laço de repetição por uma função que calcula 
+#os dados de uma só vez ao invez de percorrer os elementos. 
+
+variancia <- function(amostra){
+    #converte os valores para numerico para evitar erros
+    amostra <- as.numeric(amostra)
+    #calcula a media dos itens de cada variavel
+    media <- mean(amostra[[2]], na.rm = TRUE)
+    #print(media)
+
+    #faz o calculo de desvio padrão da coluna
+    return (sum((amostra-media)^2)/(length(amostra)-1))     
+}
+
+#A função sapply do R executa a fução dp 
+#(calcular desvio padrão) para cada coluna da amostra
+
+resultados_var <- sapply(amostra, variancia)
+print(resultados_var)
 
